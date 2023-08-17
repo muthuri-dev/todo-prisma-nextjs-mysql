@@ -1,8 +1,11 @@
 import TodoItem from "@/components/TodoItem";
 import { prisma } from "@/db";
-import Image from "next/image";
 import Link from "next/link";
 
+async function toggleTodo(id:string ,isComplete:boolean){
+"use server"
+await prisma .todos.update({where:{id},data:{isComplete}})
+}
 export default async function Home() {
   const todos = await prisma.todos.findMany();
   // await prisma.todos.create({
@@ -21,7 +24,7 @@ export default async function Home() {
       </header>
       <ul className="pl-4">
         {todos.map((todo) => (
-          <TodoItem key={todo.id} {...todo}/>
+          <TodoItem key={todo.id} {...todo} toggleTodo={toggleTodo} />
         ))}
       </ul>
     </main>
